@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DX STUDIO — 게이미피케이션 갤러리</title>
+<title>DX GAMIFICATION STUDIO — 게이미피케이션 갤러리</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -227,7 +227,7 @@
     z-index: 10;
   }
   .card-thumb {
-    aspect-ratio: 16/9;
+    aspect-ratio: 1/1;
     overflow: hidden;
     position: relative;
     background: var(--gray-800);
@@ -235,7 +235,7 @@
   .card-thumb img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     transition: transform 0.4s ease;
     display: block;
   }
@@ -491,13 +491,13 @@
     overflow: hidden;
   }
   .detail-thumb {
-    aspect-ratio: 16/9;
+    aspect-ratio: 1/1;
     background: var(--gray-800);
     overflow: hidden;
   }
   .detail-thumb img {
     width: 100%; height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     display: block;
   }
   .detail-thumb-placeholder {
@@ -674,7 +674,7 @@
 
 <!-- NAV -->
 <nav id="mainNav">
-  <a href="#" class="nav-logo">DX <span class="logo-mid">Gamification</span> <span class="logo-end">Studio</span></a>
+  <a href="#" class="nav-logo">DX <span class="logo-mid">GAMIFICATION</span> <span class="logo-end">STUDIO</span></a>
   <div class="nav-right">
     <span id="adminStatus" style="font-size:12px; color:#e50914; display:none;">● 관리자 모드</span>
     <button class="admin-btn" id="adminToggle" onclick="openPasswordModal()">관리자</button>
@@ -696,7 +696,7 @@
   <div class="hero-content">
     <span class="hero-badge">DX Team Original</span>
     <h1 class="hero-title">우리가 만든<br><span class="accent">게이미피케이션</span><br>콘텐츠</h1>
-    <p class="hero-desc">DX팀이 직접 기획하고 개발한 고객 참여형 디지털 경험.<br>DX팀과 함께라면 당신도 이런 콘텐츠를 함께 만들 수 있어요.</p>
+    <p class="hero-desc">DX팀이 직접 기획하고 개발한 고객 참여형 디지털 경험.<br>여러분도 이런 콘텐츠를 DX팀과 함께 만들 수 있어요.</p>
     <div class="hero-stats">
       <div class="stat-item">
         <div class="stat-num" id="totalCount">0</div>
@@ -720,7 +720,7 @@
 <!-- FOOTER -->
 <footer>
   <div class="footer-inner">
-    <div class="footer-logo">DX Gamification STUDIO</div>
+    <div class="footer-logo">DX GAMIFICATION STUDIO</div>
     <div class="footer-text">DX팀 · 게이미피케이션 갤러리</div>
   </div>
 </footer>
@@ -792,10 +792,6 @@
       <input type="file" id="f-thumb-file" accept="image/*" style="display:none;" onchange="handleThumbUpload(event)">
     </div>
 
-    <div class="form-group">
-      <label class="form-label">썸네일 이모지 <span style="color:var(--gray-500); font-size:12px;">(이미지 URL 없을 때 표시)</span></label>
-      <input type="text" class="form-input" id="f-emoji" placeholder="🎮" maxlength="4" style="font-size:24px; text-align:center;">
-    </div>
 
     <div class="form-group">
       <label class="form-label">콘텐츠 URL</label>
@@ -975,7 +971,7 @@ function createCard(item, idx) {
   const emojiPlaceholder = `<div class="card-thumb-placeholder">${escHtml(item.emoji||'🎮')}</div>`;
 
   card.innerHTML = `
-    <div class="card-thumb" id="thumb-${item.id}">
+    <div class="card-thumb">
       ${emojiPlaceholder}
       ${badgeHTML}
     </div>
@@ -997,7 +993,7 @@ function createCard(item, idx) {
 
   getThumbSrc(item).then(src => {
     if (!src) return;
-    const thumbEl = document.getElementById('thumb-' + item.id);
+    const thumbEl = card.querySelector('.card-thumb');
     if (!thumbEl) return;
     const img = document.createElement('img');
     img.src = src;
@@ -1132,11 +1128,10 @@ function updateAdminUI() {
 function openAddModal() {
   document.getElementById('editingId').value = '';
   document.getElementById('addModalTitle').textContent = '새 콘텐츠 추가';
-  ['f-title','f-url','f-desc','f-badge','f-emoji'].forEach(id => document.getElementById(id).value = '');
+  ['f-title','f-url','f-desc','f-badge'].forEach(id => document.getElementById(id).value = '');
   setThumbPreview('');
   document.getElementById('f-category').value = 'Minigame';
   document.getElementById('f-date').value = new Date().toISOString().slice(0,7);
-  document.getElementById('f-emoji').value = '🎮';
   openModal('addModal');
 }
 
@@ -1151,7 +1146,6 @@ function openEdit(id, e) {
   document.getElementById('f-category').value = item.category || 'Minigame';
   document.getElementById('f-date').value = item.date || '';
   document.getElementById('f-url').value = item.url || '';
-  document.getElementById('f-emoji').value = item.emoji || '🎮';
   setThumbPreview(item.thumbUrl || '');
   document.getElementById('f-desc').value = item.desc || '';
   document.getElementById('f-badge').value = item.badge || '';
@@ -1173,7 +1167,7 @@ function saveContent() {
     category: document.getElementById('f-category').value,
     date: document.getElementById('f-date').value,
     thumbUrl: document.getElementById('f-thumb').value.trim(),
-    emoji: document.getElementById('f-emoji').value.trim() || '🎮',
+    emoji: '🎮',
     url: document.getElementById('f-url').value.trim(),
     desc,
     badge: document.getElementById('f-badge').value.trim(),
