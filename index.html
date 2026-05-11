@@ -939,7 +939,6 @@ function renderGallery() {
   // Category sections
   categories.forEach(cat => {
     const items = sorted.filter(d => d.category === cat);
-    if (items.length < 2) return;
     const sec = document.createElement('div');
     sec.className = 'section';
     sec.innerHTML = `
