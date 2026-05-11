@@ -1,0 +1,1284 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DX STUDIO — 게이미피케이션 갤러리</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black: #0a0a0a;
+    --red: #e50914;
+    --red-dark: #b20710;
+    --white: #ffffff;
+    --gray-100: #f5f5f5;
+    --gray-300: #b3b3b3;
+    --gray-500: #808080;
+    --gray-700: #404040;
+    --gray-800: #2a2a2a;
+    --gray-900: #141414;
+    --card-bg: #1a1a1a;
+    --overlay: rgba(0,0,0,0.7);
+    --font-display: 'Black Han Sans', sans-serif;
+    --font-body: 'Noto Sans KR', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: var(--font-body);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 0 4vw;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, transparent 100%);
+    transition: background 0.3s;
+  }
+  nav.scrolled { background: var(--black); }
+
+  .nav-logo {
+    font-family: var(--font-display);
+    font-size: 22px;
+    color: var(--red);
+    letter-spacing: 2px;
+    text-decoration: none;
+  }
+  .nav-logo .logo-mid { color: var(--gray-300); font-size: 18px; }
+  .nav-logo .logo-end { color: var(--white); }
+
+  .nav-right { display: flex; align-items: center; gap: 16px; }
+
+  .admin-btn {
+    background: transparent;
+    border: 1px solid var(--gray-500);
+    color: var(--gray-300);
+    padding: 6px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: var(--font-body);
+    font-size: 13px;
+    transition: all 0.2s;
+  }
+  .admin-btn:hover { border-color: var(--white); color: var(--white); }
+  .admin-btn.active { border-color: var(--red); color: var(--red); }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    height: 70vh;
+    min-height: 480px;
+    display: flex;
+    align-items: flex-end;
+    padding: 0 4vw 60px;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #1a0a0a 0%, #0d0d2b 50%, #0a1a0a 100%);
+    overflow: hidden;
+  }
+  .hero-particles {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+  }
+  .particle {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: var(--red);
+    border-radius: 50%;
+    animation: float linear infinite;
+    opacity: 0;
+  }
+  @keyframes float {
+    0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+    10% { opacity: 0.6; }
+    90% { opacity: 0.3; }
+    100% { transform: translateY(-20px) translateX(40px); opacity: 0; }
+  }
+  .hero-gradient {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, var(--black) 0%, transparent 50%),
+                linear-gradient(to right, rgba(0,0,0,0.8) 0%, transparent 60%);
+  }
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 600px;
+    animation: heroIn 1s ease-out;
+  }
+  @keyframes heroIn {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .hero-badge {
+    display: inline-block;
+    background: var(--red);
+    color: var(--white);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    padding: 4px 12px;
+    border-radius: 2px;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+  }
+  .hero-title {
+    font-family: var(--font-display);
+    font-size: clamp(36px, 6vw, 72px);
+    line-height: 1.05;
+    margin-bottom: 16px;
+    text-shadow: 2px 2px 20px rgba(0,0,0,0.8);
+  }
+  .hero-title .accent { color: var(--red); }
+  .hero-desc {
+    font-size: 15px;
+    color: var(--gray-300);
+    line-height: 1.7;
+    max-width: 480px;
+    margin-bottom: 28px;
+  }
+  .hero-stats {
+    display: flex;
+    gap: 32px;
+  }
+  .stat-item { text-align: left; }
+  .stat-num {
+    font-family: var(--font-display);
+    font-size: 28px;
+    color: var(--red);
+  }
+  .stat-label {
+    font-size: 12px;
+    color: var(--gray-500);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  /* SECTION */
+  .section {
+    padding: 0 4vw 48px;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+    padding-top: 8px;
+  }
+  .section-title {
+    font-family: var(--font-display);
+    font-size: 20px;
+    letter-spacing: 1px;
+  }
+  .section-line {
+    flex: 1;
+    height: 1px;
+    background: var(--gray-800);
+  }
+  .item-count {
+    font-size: 13px;
+    color: var(--gray-500);
+  }
+
+  /* GRID */
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+  }
+
+  /* CARD */
+  .card {
+    background: var(--card-bg);
+    border-radius: 6px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    position: relative;
+    animation: cardIn 0.4s ease-out both;
+  }
+  @keyframes cardIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  .card:hover {
+    transform: scale(1.04) translateY(-4px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.8), 0 0 30px rgba(229,9,20,0.15);
+    z-index: 10;
+  }
+  .card-thumb {
+    aspect-ratio: 16/9;
+    overflow: hidden;
+    position: relative;
+    background: var(--gray-800);
+  }
+  .card-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+    display: block;
+  }
+  .card:hover .card-thumb img { transform: scale(1.08); }
+  .card-thumb-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    background: linear-gradient(135deg, var(--gray-800), var(--gray-900));
+  }
+  .card-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: var(--red);
+    color: var(--white);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 3px 8px;
+    border-radius: 2px;
+    text-transform: uppercase;
+  }
+  .card-new-badge {
+    background: #e5a109;
+  }
+  .card-info {
+    padding: 14px 16px;
+  }
+  .card-title {
+    font-weight: 700;
+    font-size: 15px;
+    margin-bottom: 6px;
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .card-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .card-tag {
+    font-size: 11px;
+    color: var(--red);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .card-dot { color: var(--gray-700); font-size: 10px; }
+  .card-date {
+    font-size: 11px;
+    color: var(--gray-500);
+  }
+  .card-desc {
+    font-size: 13px;
+    color: var(--gray-300);
+    line-height: 1.55;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+  .card-actions {
+    padding: 0 16px 14px;
+    display: flex;
+    gap: 8px;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .card:hover .card-actions { opacity: 1; }
+  .btn-play {
+    background: var(--white);
+    color: var(--black);
+    border: none;
+    padding: 7px 16px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.15s;
+    font-family: var(--font-body);
+  }
+  .btn-play:hover { background: var(--gray-100); }
+  .btn-more {
+    background: rgba(109,109,110,0.7);
+    color: var(--white);
+    border: none;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s;
+  }
+  .btn-more:hover { background: rgba(109,109,110,1); }
+
+  /* MODAL */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    animation: fadeIn 0.2s;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  .modal-overlay.hidden { display: none; }
+
+  .modal {
+    background: #181818;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 560px;
+    padding: 36px;
+    position: relative;
+    animation: slideUp 0.25s ease-out;
+  }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px) scale(0.97); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .modal-close {
+    position: absolute;
+    top: 16px; right: 16px;
+    background: transparent;
+    border: none;
+    color: var(--gray-300);
+    font-size: 22px;
+    cursor: pointer;
+    line-height: 1;
+    transition: color 0.15s;
+  }
+  .modal-close:hover { color: var(--white); }
+  .modal-title {
+    font-family: var(--font-display);
+    font-size: 22px;
+    margin-bottom: 8px;
+    color: var(--red);
+  }
+  .modal-subtitle {
+    font-size: 14px;
+    color: var(--gray-500);
+    margin-bottom: 28px;
+  }
+
+  .form-group { margin-bottom: 20px; }
+  .form-label {
+    display: block;
+    font-size: 13px;
+    color: var(--gray-300);
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+  .form-label .required { color: var(--red); margin-left: 3px; }
+  .form-input, .form-textarea, .form-select {
+    width: 100%;
+    background: var(--gray-800);
+    border: 1px solid var(--gray-700);
+    border-radius: 4px;
+    color: var(--white);
+    font-family: var(--font-body);
+    font-size: 14px;
+    padding: 10px 14px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .form-input:focus, .form-textarea:focus, .form-select:focus {
+    border-color: var(--red);
+  }
+  .form-textarea { resize: vertical; min-height: 80px; }
+  .form-select { appearance: none; cursor: pointer; }
+  .form-select option { background: var(--gray-800); }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  .btn-submit {
+    width: 100%;
+    background: var(--red);
+    border: none;
+    color: var(--white);
+    font-family: var(--font-display);
+    font-size: 16px;
+    letter-spacing: 1px;
+    padding: 13px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-submit:hover { background: var(--red-dark); }
+
+  /* PASSWORD MODAL */
+  .pw-modal {
+    max-width: 360px;
+    text-align: center;
+  }
+  .pw-icon {
+    font-size: 40px;
+    margin-bottom: 16px;
+  }
+  .pw-input-wrap {
+    position: relative;
+    margin-bottom: 20px;
+  }
+  .pw-input {
+    width: 100%;
+    background: var(--gray-800);
+    border: 2px solid var(--gray-700);
+    border-radius: 4px;
+    color: var(--white);
+    font-family: var(--font-body);
+    font-size: 20px;
+    text-align: center;
+    letter-spacing: 8px;
+    padding: 12px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .pw-input:focus { border-color: var(--red); }
+  .pw-input.error { border-color: #e74c3c; animation: shake 0.3s; }
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-8px); }
+    75% { transform: translateX(8px); }
+  }
+  .pw-error {
+    font-size: 13px;
+    color: #e74c3c;
+    margin-top: 8px;
+    min-height: 18px;
+  }
+
+  /* DETAIL MODAL */
+  .detail-modal {
+    max-width: 680px;
+    padding: 0;
+    overflow: hidden;
+  }
+  .detail-thumb {
+    aspect-ratio: 16/9;
+    background: var(--gray-800);
+    overflow: hidden;
+  }
+  .detail-thumb img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .detail-thumb-placeholder {
+    width: 100%; height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 64px;
+    background: linear-gradient(135deg, #1a0a0a, #0d0d2b);
+  }
+  .detail-body { padding: 28px 32px 32px; }
+  .detail-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+  .detail-tag {
+    background: var(--red);
+    color: var(--white);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 3px 10px;
+    border-radius: 2px;
+    text-transform: uppercase;
+  }
+  .detail-date { font-size: 13px; color: var(--gray-500); }
+  .detail-title {
+    font-family: var(--font-display);
+    font-size: 26px;
+    margin-bottom: 12px;
+    line-height: 1.2;
+  }
+  .detail-desc {
+    font-size: 14px;
+    color: var(--gray-300);
+    line-height: 1.75;
+    margin-bottom: 24px;
+  }
+  .detail-actions { display: flex; gap: 10px; }
+  .btn-open {
+    background: var(--red);
+    color: var(--white);
+    border: none;
+    padding: 11px 28px;
+    border-radius: 4px;
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    transition: background 0.15s;
+  }
+  .btn-open:hover { background: var(--red-dark); }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--gray-800);
+    color: var(--white);
+    padding: 12px 24px;
+    border-radius: 4px;
+    font-size: 14px;
+    z-index: 999;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    opacity: 0;
+    border-left: 3px solid var(--red);
+    white-space: nowrap;
+  }
+  .toast.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+
+  /* ADMIN BAR */
+  .admin-bar {
+    background: rgba(229,9,20,0.1);
+    border-bottom: 1px solid var(--red);
+    padding: 10px 4vw;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: sticky;
+    top: 64px;
+    z-index: 50;
+  }
+  .admin-bar.hidden { display: none; }
+  .admin-bar-text { font-size: 13px; color: var(--red); font-weight: 500; }
+  .btn-add-new {
+    background: var(--red);
+    color: var(--white);
+    border: none;
+    padding: 7px 18px;
+    border-radius: 4px;
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-left: auto;
+    transition: background 0.15s;
+  }
+  .btn-add-new:hover { background: var(--red-dark); }
+
+  /* FOOTER */
+  footer {
+    padding: 40px 4vw;
+    border-top: 1px solid var(--gray-800);
+    margin-top: 40px;
+  }
+  .footer-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .footer-logo {
+    font-family: var(--font-display);
+    font-size: 18px;
+    color: var(--gray-700);
+    letter-spacing: 2px;
+  }
+  .footer-text {
+    font-size: 13px;
+    color: var(--gray-700);
+  }
+
+  /* EMPTY */
+  .empty-state {
+    text-align: center;
+    padding: 80px 20px;
+    color: var(--gray-500);
+  }
+  .empty-state .empty-icon { font-size: 48px; margin-bottom: 16px; }
+  .empty-state p { font-size: 15px; line-height: 1.7; }
+
+  /* DELETE BTN */
+  .btn-delete {
+    background: rgba(229,9,20,0.15);
+    color: var(--red);
+    border: 1px solid rgba(229,9,20,0.3);
+    padding: 11px 20px;
+    border-radius: 4px;
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.15s;
+  }
+  .btn-delete:hover { background: rgba(229,9,20,0.3); }
+  body.admin-mode .btn-delete { display: flex; }
+
+  @media (max-width: 600px) {
+    .hero { height: 60vh; min-height: 380px; }
+    .hero-stats { gap: 20px; }
+    .form-row { grid-template-columns: 1fr; }
+    .gallery-grid { grid-template-columns: 1fr; }
+    .detail-body { padding: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <a href="#" class="nav-logo">DX <span class="logo-mid">Gamification</span> <span class="logo-end">Studio</span></a>
+  <div class="nav-right">
+    <span id="adminStatus" style="font-size:12px; color:#e50914; display:none;">● 관리자 모드</span>
+    <button class="admin-btn" id="adminToggle" onclick="openPasswordModal()">관리자</button>
+  </div>
+</nav>
+
+<!-- ADMIN BAR -->
+<div class="admin-bar hidden" id="adminBar">
+  <span class="admin-bar-text">🔐 관리자 모드 활성화</span>
+  <button class="btn-add-new" onclick="openAddModal()">+ 새 콘텐츠 추가</button>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg">
+    <div class="hero-particles" id="particles"></div>
+    <div class="hero-gradient"></div>
+  </div>
+  <div class="hero-content">
+    <span class="hero-badge">DX Team Original</span>
+    <h1 class="hero-title">우리가 만든<br><span class="accent">게이미피케이션</span><br>콘텐츠</h1>
+    <p class="hero-desc">DX팀이 직접 기획하고 개발한 고객 참여형 디지털 경험.<br>DX팀과 함께라면 당신도 이런 콘텐츠를 함께 만들 수 있어요.</p>
+    <div class="hero-stats">
+      <div class="stat-item">
+        <div class="stat-num" id="totalCount">0</div>
+        <div class="stat-label">콘텐츠</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num" id="categoryCount">0</div>
+        <div class="stat-label">카테고리</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ADMIN BAR SPACER -->
+<div id="adminBarSpacer" style="height:0;"></div>
+
+<!-- GALLERY -->
+<main id="galleryMain">
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">DX Gamification STUDIO</div>
+    <div class="footer-text">DX팀 · 게이미피케이션 갤러리</div>
+  </div>
+</footer>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- PASSWORD MODAL -->
+<div class="modal-overlay hidden" id="pwModal">
+  <div class="modal pw-modal">
+    <button class="modal-close" onclick="closeModal('pwModal')">✕</button>
+    <div class="pw-icon">🔐</div>
+    <div class="modal-title">관리자 인증</div>
+    <div class="modal-subtitle">비밀번호를 입력하세요</div>
+    <div class="pw-input-wrap">
+      <input type="password" class="pw-input" id="pwInput" maxlength="8" placeholder="••••"
+        onkeydown="if(event.key==='Enter') checkPassword()">
+      <div class="pw-error" id="pwError"></div>
+    </div>
+    <button class="btn-submit" onclick="checkPassword()">확인</button>
+  </div>
+</div>
+
+<!-- ADD/EDIT MODAL -->
+<div class="modal-overlay hidden" id="addModal">
+  <div class="modal" style="max-width:600px; max-height:90vh; overflow-y:auto;">
+    <button class="modal-close" onclick="closeModal('addModal')">✕</button>
+    <div class="modal-title" id="addModalTitle">새 콘텐츠 추가</div>
+    <div class="modal-subtitle">갤러리에 새 게이미피케이션 콘텐츠를 등록합니다</div>
+
+    <input type="hidden" id="editingId">
+
+    <div class="form-group">
+      <label class="form-label">콘텐츠 제목<span class="required">*</span></label>
+      <input type="text" class="form-input" id="f-title" placeholder="예: 5월 이름 궁합 테스트">
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">카테고리<span class="required">*</span></label>
+        <select class="form-select form-input" id="f-category">
+          <option value="퀴즈/테스트">퀴즈/테스트</option>
+          <option value="Minigame">Minigame</option>
+          <option value="인터랙티브">인터랙티브</option>
+          <option value="이벤트">이벤트</option>
+          <option value="기타">기타</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">제작 연월</label>
+        <input type="month" class="form-input" id="f-date">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">썸네일 이미지 <span style="color:var(--gray-500); font-size:12px;">(선택 — 없으면 이모지 표시)</span></label>
+      <input type="hidden" id="f-thumb">
+      <div id="thumb-upload-area" onclick="document.getElementById('f-thumb-file').click()" style="border:2px dashed var(--gray-700); border-radius:6px; padding:20px; text-align:center; cursor:pointer; transition:border-color 0.2s; position:relative;" onmouseover="this.style.borderColor='var(--gray-500)'" onmouseout="this.style.borderColor='var(--gray-700)'">
+        <div id="thumb-preview" style="display:none; position:relative;">
+          <img id="thumb-preview-img" style="width:100%; max-height:160px; object-fit:cover; border-radius:4px; display:block;">
+          <button type="button" onclick="clearThumb(event)" style="position:absolute; top:6px; right:6px; background:rgba(0,0,0,0.7); color:white; border:none; border-radius:50%; width:26px; height:26px; font-size:14px; cursor:pointer; line-height:1;">✕</button>
+        </div>
+        <div id="thumb-placeholder" style="color:var(--gray-500); font-size:13px;">
+          <div style="font-size:28px; margin-bottom:8px;">🖼️</div>
+          클릭해서 이미지 업로드<br>
+          <span style="font-size:11px;">JPG · PNG · GIF · WEBP</span>
+        </div>
+      </div>
+      <input type="file" id="f-thumb-file" accept="image/*" style="display:none;" onchange="handleThumbUpload(event)">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">썸네일 이모지 <span style="color:var(--gray-500); font-size:12px;">(이미지 URL 없을 때 표시)</span></label>
+      <input type="text" class="form-input" id="f-emoji" placeholder="🎮" maxlength="4" style="font-size:24px; text-align:center;">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">콘텐츠 URL</label>
+      <input type="url" class="form-input" id="f-url" placeholder="https://...">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">설명<span class="required">*</span></label>
+      <textarea class="form-textarea form-input" id="f-desc" rows="3" placeholder="어떤 콘텐츠인지, 어떻게 만들었는지 간략히 설명해주세요."></textarea>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">배지 텍스트 <span style="color:var(--gray-500); font-size:12px;">(선택)</span></label>
+      <input type="text" class="form-input" id="f-badge" placeholder="예: NEW · HOT · 추천" maxlength="8">
+    </div>
+
+    <button class="btn-submit" onclick="saveContent()">저장하기</button>
+  </div>
+</div>
+
+<!-- DETAIL MODAL -->
+<div class="modal-overlay hidden" id="detailModal">
+  <div class="modal detail-modal">
+    <button class="modal-close" onclick="closeModal('detailModal')" style="position:absolute; top:12px; right:12px; z-index:10; background:rgba(0,0,0,0.6); width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; border:none; color:white; font-size:18px; cursor:pointer;">✕</button>
+    <div class="detail-thumb" id="d-thumb"></div>
+    <div class="detail-body">
+      <div class="detail-meta">
+        <span class="detail-tag" id="d-tag"></span>
+        <span class="detail-date" id="d-date"></span>
+      </div>
+      <div class="detail-title" id="d-title"></div>
+      <div class="detail-desc" id="d-desc"></div>
+      <div class="detail-actions">
+        <a class="btn-open" id="d-link" href="#" target="_blank">
+          <span>▶</span> 콘텐츠 열기
+        </a>
+        <button class="btn-delete" id="d-delete" onclick="deleteCurrentItem()">
+          🗑 삭제
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const PW = '1979';
+const STORAGE_KEY = 'dx_gallery_v3';
+let isAdmin = false;
+let currentDetailId = null;
+
+/* ---------- DATA ---------- */
+const DEFAULT_DATA = [
+  {
+    id: 1,
+    title: '5월 이름 궁합 테스트',
+    category: 'Minigame',
+    date: '2025-05',
+    thumbUrl: 'https://images.unsplash.com/photo-1614624532983-4ce03382d63d?w=600&q=80',
+    emoji: '💑',
+    url: '',
+    desc: '두 사람의 이름을 입력하면 획수 기반 피라미드 알고리즘으로 궁합 점수를 계산하는 인터랙티브 이벤트 페이지. 커플 모드와 가족 모드를 지원합니다.',
+    badge: 'HOT',
+    badgeClass: ''
+  },
+  {
+    id: 2,
+    title: 'CESCO 퍼스널리티 퀴즈',
+    category: '퀴즈/테스트',
+    date: '2025-04',
+    thumbUrl: 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=600&q=80',
+    emoji: '🐜',
+    url: '',
+    desc: '해충 유형에 빗댄 유머러스한 직원 성격 유형 분석 퀴즈. 12가지 결과 유형과 함께 공유 가능한 결과 카드를 생성합니다.',
+    badge: 'NEW',
+    badgeClass: 'card-new-badge'
+  },
+  {
+    id: 3,
+    title: '조선 인물 매칭 테스트',
+    category: '퀴즈/테스트',
+    date: '2024-11',
+    thumbUrl: 'https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=600&q=80',
+    emoji: '📜',
+    url: '',
+    desc: '52명의 조선시대 역사 인물 DB를 기반으로, 사용자의 성향 키워드에 맞는 인물을 매칭해주는 Streamlit 앱. 7개 카테고리로 구성.',
+    badge: '',
+    badgeClass: ''
+  }
+];
+
+function loadData() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch(e) {}
+  return JSON.parse(JSON.stringify(DEFAULT_DATA));
+}
+
+function saveData(data) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+/* ---------- RENDER ---------- */
+function getCategories(data) {
+  return [...new Set(data.map(d => d.category))];
+}
+
+function renderGallery() {
+  const data = loadData();
+  const main = document.getElementById('galleryMain');
+  const categories = getCategories(data);
+
+  document.getElementById('totalCount').textContent = data.length;
+  document.getElementById('categoryCount').textContent = categories.length;
+
+  main.innerHTML = '';
+
+  if (data.length === 0) {
+    main.innerHTML = `<div class="empty-state"><div class="empty-icon">🎮</div><p>아직 등록된 콘텐츠가 없어요.<br>관리자 모드에서 첫 콘텐츠를 추가해보세요!</p></div>`;
+    return;
+  }
+
+  // Sort: newest first
+  const sorted = [...data].sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+
+  // ALL section
+  const section = document.createElement('div');
+  section.className = 'section';
+  section.innerHTML = `
+    <div class="section-header">
+      <h2 class="section-title">전체 콘텐츠</h2>
+      <div class="section-line"></div>
+      <span class="item-count">${sorted.length}개</span>
+    </div>
+    <div class="gallery-grid" id="grid-all"></div>
+  `;
+  main.appendChild(section);
+
+  const grid = section.querySelector('#grid-all');
+  sorted.forEach((item, i) => {
+    const card = createCard(item, i);
+    grid.appendChild(card);
+  });
+
+  // Category sections
+  categories.forEach(cat => {
+    const items = sorted.filter(d => d.category === cat);
+    if (items.length < 2) return;
+    const sec = document.createElement('div');
+    sec.className = 'section';
+    sec.innerHTML = `
+      <div class="section-header">
+        <h2 class="section-title">${cat}</h2>
+        <div class="section-line"></div>
+        <span class="item-count">${items.length}개</span>
+      </div>
+      <div class="gallery-grid"></div>
+    `;
+    main.appendChild(sec);
+    const g = sec.querySelector('.gallery-grid');
+    items.forEach((item, i) => {
+      g.appendChild(createCard(item, i));
+    });
+  });
+}
+
+function createCard(item, idx) {
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.style.animationDelay = (idx * 0.05) + 's';
+
+  const badgeHTML = item.badge
+    ? `<span class="card-badge ${escHtml(item.badgeClass||'')}">${escHtml(item.badge)}</span>`
+    : '';
+
+  const dateStr = item.date ? item.date.replace('-', '.') : '';
+  const emojiPlaceholder = `<div class="card-thumb-placeholder">${escHtml(item.emoji||'🎮')}</div>`;
+
+  card.innerHTML = `
+    <div class="card-thumb" id="thumb-${item.id}">
+      ${emojiPlaceholder}
+      ${badgeHTML}
+    </div>
+    <div class="card-info">
+      <div class="card-title">${escHtml(item.title)}</div>
+      <div class="card-meta">
+        <span class="card-tag">${escHtml(item.category)}</span>
+        <span class="card-dot">·</span>
+        <span class="card-date">${escHtml(dateStr)}</span>
+      </div>
+      <div class="card-desc">${escHtml(item.desc)}</div>
+    </div>
+    <div class="card-actions">
+      <button class="btn-play" onclick="openDetail(${item.id}, event)">▶ 자세히 보기</button>
+      ${isAdmin ? `<button class="btn-more" onclick="openEdit(${item.id}, event)" title="수정">✎</button>` : ''}
+    </div>
+  `;
+  card.addEventListener('click', () => openDetail(item.id));
+
+  getThumbSrc(item).then(src => {
+    if (!src) return;
+    const thumbEl = document.getElementById('thumb-' + item.id);
+    if (!thumbEl) return;
+    const img = document.createElement('img');
+    img.src = src;
+    img.alt = item.title;
+    img.onerror = () => {};
+    img.onload = () => {
+      thumbEl.innerHTML = '';
+      thumbEl.appendChild(img);
+      if (badgeHTML) thumbEl.insertAdjacentHTML('beforeend', badgeHTML);
+    };
+  });
+
+  return card;
+}
+
+function getThumbSrc(item) {
+  if (item.thumbUrl) return Promise.resolve(item.thumbUrl);
+  if (item.url) {
+    const proxy = 'https://api.allorigins.win/get?url=' + encodeURIComponent(item.url);
+    return fetch(proxy)
+      .then(r => r.json())
+      .then(data => {
+        const match = data.contents && data.contents.match(/<meta[^>]+(?:og:image|twitter:image)[^>]+content=["']([^"']+)["']/i)
+          || data.contents && data.contents.match(/content=["']([^"']+)["'][^>]+(?:og:image|twitter:image)/i);
+        return match ? match[1] : null;
+      })
+      .catch(() => null);
+  }
+  return Promise.resolve(null);
+}
+
+
+function escHtml(str) {
+  return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+/* ---------- DETAIL ---------- */
+function openDetail(id, e) {
+  if (e) e.stopPropagation();
+  const data = loadData();
+  const item = data.find(d => d.id === id);
+  if (!item) return;
+  currentDetailId = id;
+
+  const thumbEl = document.getElementById('d-thumb');
+  thumbEl.innerHTML = `<div class="detail-thumb-placeholder">${escHtml(item.emoji||'🎮')}</div>`;
+  getThumbSrc(item).then(src => {
+    if (!src) return;
+    const img = document.createElement('img');
+    img.src = src;
+    img.alt = item.title;
+    img.onload = () => { thumbEl.innerHTML = ''; thumbEl.appendChild(img); };
+  });
+
+  document.getElementById('d-tag').textContent = item.category || '';
+  document.getElementById('d-date').textContent = (item.date||'').replace('-', '.');
+  document.getElementById('d-title').textContent = item.title || '';
+  document.getElementById('d-desc').textContent = item.desc || '';
+
+  const linkEl = document.getElementById('d-link');
+  if (item.url) {
+    linkEl.href = item.url;
+    linkEl.style.display = 'flex';
+  } else {
+    linkEl.style.display = 'none';
+  }
+
+  openModal('detailModal');
+}
+
+function deleteCurrentItem() {
+  if (!currentDetailId) return;
+  if (!confirm('이 콘텐츠를 삭제하시겠습니까?')) return;
+  const data = loadData().filter(d => d.id !== currentDetailId);
+  saveData(data);
+  closeModal('detailModal');
+  renderGallery();
+  showToast('콘텐츠가 삭제되었습니다.');
+}
+
+/* ---------- ADMIN ---------- */
+function openPasswordModal() {
+  if (isAdmin) {
+    if (confirm('관리자 모드를 해제하시겠습니까?')) {
+      isAdmin = false;
+      updateAdminUI();
+    }
+    return;
+  }
+  document.getElementById('pwInput').value = '';
+  document.getElementById('pwError').textContent = '';
+  document.getElementById('pwInput').classList.remove('error');
+  openModal('pwModal');
+  setTimeout(() => document.getElementById('pwInput').focus(), 100);
+}
+
+function checkPassword() {
+  const val = document.getElementById('pwInput').value;
+  if (val === PW) {
+    isAdmin = true;
+    closeModal('pwModal');
+    updateAdminUI();
+    showToast('관리자 모드가 활성화되었습니다.');
+  } else {
+    document.getElementById('pwError').textContent = '비밀번호가 올바르지 않습니다.';
+    document.getElementById('pwInput').classList.add('error');
+    setTimeout(() => document.getElementById('pwInput').classList.remove('error'), 400);
+  }
+}
+
+function updateAdminUI() {
+  const bar = document.getElementById('adminBar');
+  const btn = document.getElementById('adminToggle');
+  const status = document.getElementById('adminStatus');
+  if (isAdmin) {
+    bar.classList.remove('hidden');
+    btn.classList.add('active');
+    btn.textContent = '관리자 OFF';
+    status.style.display = 'inline';
+    document.body.classList.add('admin-mode');
+  } else {
+    bar.classList.add('hidden');
+    btn.classList.remove('active');
+    btn.textContent = '관리자';
+    status.style.display = 'none';
+    document.body.classList.remove('admin-mode');
+  }
+  renderGallery();
+}
+
+/* ---------- ADD/EDIT ---------- */
+function openAddModal() {
+  document.getElementById('editingId').value = '';
+  document.getElementById('addModalTitle').textContent = '새 콘텐츠 추가';
+  ['f-title','f-url','f-desc','f-badge','f-emoji'].forEach(id => document.getElementById(id).value = '');
+  setThumbPreview('');
+  document.getElementById('f-category').value = 'Minigame';
+  document.getElementById('f-date').value = new Date().toISOString().slice(0,7);
+  document.getElementById('f-emoji').value = '🎮';
+  openModal('addModal');
+}
+
+function openEdit(id, e) {
+  if (e) e.stopPropagation();
+  const data = loadData();
+  const item = data.find(d => d.id === id);
+  if (!item) return;
+  document.getElementById('editingId').value = id;
+  document.getElementById('addModalTitle').textContent = '콘텐츠 수정';
+  document.getElementById('f-title').value = item.title || '';
+  document.getElementById('f-category').value = item.category || 'Minigame';
+  document.getElementById('f-date').value = item.date || '';
+  document.getElementById('f-url').value = item.url || '';
+  document.getElementById('f-emoji').value = item.emoji || '🎮';
+  setThumbPreview(item.thumbUrl || '');
+  document.getElementById('f-desc').value = item.desc || '';
+  document.getElementById('f-badge').value = item.badge || '';
+  openModal('addModal');
+}
+
+function saveContent() {
+  const title = document.getElementById('f-title').value.trim();
+  const desc = document.getElementById('f-desc').value.trim();
+  if (!title) { showToast('제목을 입력해주세요.'); return; }
+  if (!desc) { showToast('설명을 입력해주세요.'); return; }
+
+  const data = loadData();
+  const editingId = parseInt(document.getElementById('editingId').value);
+
+  const newItem = {
+    id: editingId || Date.now(),
+    title,
+    category: document.getElementById('f-category').value,
+    date: document.getElementById('f-date').value,
+    thumbUrl: document.getElementById('f-thumb').value.trim(),
+    emoji: document.getElementById('f-emoji').value.trim() || '🎮',
+    url: document.getElementById('f-url').value.trim(),
+    desc,
+    badge: document.getElementById('f-badge').value.trim(),
+    badgeClass: document.getElementById('f-badge').value.trim() === 'NEW' ? 'card-new-badge' : ''
+  };
+
+  if (editingId) {
+    const idx = data.findIndex(d => d.id === editingId);
+    if (idx >= 0) data[idx] = newItem;
+  } else {
+    data.push(newItem);
+  }
+
+  saveData(data);
+  closeModal('addModal');
+  renderGallery();
+  showToast(editingId ? '콘텐츠가 수정되었습니다.' : '새 콘텐츠가 추가되었습니다!');
+}
+
+/* ---------- THUMB UPLOAD ---------- */
+function handleThumbUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const base64 = e.target.result;
+    document.getElementById('f-thumb').value = base64;
+    document.getElementById('thumb-preview-img').src = base64;
+    document.getElementById('thumb-preview').style.display = 'block';
+    document.getElementById('thumb-placeholder').style.display = 'none';
+  };
+  reader.readAsDataURL(file);
+}
+
+function clearThumb(event) {
+  event.stopPropagation();
+  document.getElementById('f-thumb').value = '';
+  document.getElementById('f-thumb-file').value = '';
+  document.getElementById('thumb-preview').style.display = 'none';
+  document.getElementById('thumb-placeholder').style.display = 'block';
+}
+
+function setThumbPreview(src) {
+  if (src) {
+    document.getElementById('f-thumb').value = src;
+    document.getElementById('thumb-preview-img').src = src;
+    document.getElementById('thumb-preview').style.display = 'block';
+    document.getElementById('thumb-placeholder').style.display = 'none';
+  } else {
+    document.getElementById('f-thumb').value = '';
+    document.getElementById('thumb-preview').style.display = 'none';
+    document.getElementById('thumb-placeholder').style.display = 'block';
+  }
+}
+
+
+function openModal(id) {
+  const el = document.getElementById(id);
+  el.classList.remove('hidden');
+  void el.offsetWidth; // reflow to restart animation
+  document.body.style.overflow = 'hidden';
+}
+function closeModal(id) {
+  document.getElementById(id).classList.add('hidden');
+  document.body.style.overflow = '';
+}
+
+// Close on overlay click (event delegation)
+document.addEventListener('click', function(e) {
+  if (e.target && e.target.classList.contains('modal-overlay')) {
+    closeModal(e.target.id);
+  }
+});
+
+/* ---------- TOAST ---------- */
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+/* ---------- PARTICLES ---------- */
+function createParticles() {
+  const container = document.getElementById('particles');
+  for (let i = 0; i < 30; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.animationDuration = (6 + Math.random() * 12) + 's';
+    p.style.animationDelay = (Math.random() * 10) + 's';
+    p.style.width = p.style.height = (1 + Math.random() * 2) + 'px';
+    if (Math.random() > 0.7) p.style.background = '#fff';
+    container.appendChild(p);
+  }
+}
+
+/* ---------- NAV SCROLL ---------- */
+window.addEventListener('scroll', () => {
+  document.getElementById('mainNav').classList.toggle('scrolled', window.scrollY > 50);
+});
+
+/* ---------- INIT ---------- */
+createParticles();
+renderGallery();
+</script>
+</body>
+</html>
