@@ -847,7 +847,7 @@ const DEFAULT_DATA = [
   {
     id: 1,
     title: '5월 이름 궁합 테스트',
-    category: 'Minigame',
+    category: '미니게임',
     date: '2025-05',
     thumbUrl: 'https://images.unsplash.com/photo-1614624532983-4ce03382d63d?w=600&q=80',
     emoji: '💑',
@@ -1129,7 +1129,7 @@ function openAddModal() {
   document.getElementById('addModalTitle').textContent = '새 콘텐츠 추가';
   ['f-title','f-url','f-desc','f-badge'].forEach(id => document.getElementById(id).value = '');
   setThumbPreview('');
-  document.getElementById('f-category').value = 'Minigame';
+  document.getElementById('f-category').value = '미니게임';
   document.getElementById('f-date').value = new Date().toISOString().slice(0,7);
   openModal('addModal');
 }
@@ -1142,7 +1142,7 @@ function openEdit(id, e) {
   document.getElementById('editingId').value = id;
   document.getElementById('addModalTitle').textContent = '콘텐츠 수정';
   document.getElementById('f-title').value = item.title || '';
-  document.getElementById('f-category').value = item.category || 'Minigame';
+  document.getElementById('f-category').value = item.category || '미니게임';
   document.getElementById('f-date').value = item.date || '';
   document.getElementById('f-url').value = item.url || '';
   setThumbPreview(item.thumbUrl || '');
